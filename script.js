@@ -84,7 +84,7 @@ function dropBombs() {
   }
 
   bottomEnemies.forEach(enemy => {
-    if (Math.random() < 0.03) {
+    if (Math.random() < 0.015) { // 爆弾発射確率を1.5%に変更
       bombs.push({ x: enemy.x + enemy.width / 2, y: enemy.y + enemy.height });
     }
   });
