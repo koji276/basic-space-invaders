@@ -10,6 +10,7 @@ let bombs = [];
 let gameInterval;
 let isGameOver = false;
 let playerLives = 3; // キャノンの残り数
+let stage = 1; // 現在のステージ
 
 const playerWidth = 50;
 const playerHeight = 20;
@@ -151,8 +152,8 @@ function checkGameOver() {
       bomb.y < playerY + playerHeight &&
       bomb.y + bombHeight > playerY
     ) {
-      bombs = []; // 爆弾リストをクリア
-      playerLives--; // ライフを1減らす
+      bombs = [];
+      playerLives--;
       document.getElementById('lives').textContent = `Lives: ${playerLives}`;
 
       if (playerLives <= 0) {
@@ -160,6 +161,31 @@ function checkGameOver() {
       }
     }
   });
+}
+
+// 全ての敵が破壊されたか確認
+function checkStageClear() {
+  if (enemies.every(enemy => !enemy.isAlive)) {
+    cancelAnimationFrame(gameInterval);
+    setTimeout(() => {
+      alert(`Success ${stage} stage!`);
+      stage++;
+      document.getElementById('stage').textContent = `Stage: ${stage}`;
+      startNextStage();
+    }, 500);
+  }
+}
+
+// 次のステージを開始
+function startNextStage() {
+  score = 0;
+  playerLives = 3;
+  bullets = [];
+  bombs = [];
+  enemySpeed += 0.5; // 次のステージで敵の速度を少し上げる
+  createEnemies();
+  isGameOver = false;
+  update();
 }
 
 function draw() {
@@ -170,6 +196,7 @@ function draw() {
   drawBombs();
   checkCollision();
   checkGameOver();
+  checkStageClear(); // ステージクリアの確認
   if (isGameOver) {
     cancelAnimationFrame(gameInterval);
     alert("ゲームオーバー！");
@@ -189,9 +216,11 @@ function update() {
 // スタートボタンをクリックしたときに呼ばれる関数
 function startGame() {
   score = 0;
-  playerLives = 3; // ライフを3にリセット
+  playerLives = 3;
+  stage = 1;
   document.getElementById('score').textContent = `Score: ${score}`;
   document.getElementById('lives').textContent = `Lives: ${playerLives}`;
+  document.getElementById('stage').textContent = `Stage: ${stage}`;
   createEnemies();
   bullets = [];
   bombs = [];
@@ -211,3 +240,4 @@ document.addEventListener('keydown', (e) => {
     bullets.push({ x: playerX + playerWidth / 2 - bulletWidth / 2, y: playerY });
   }
 });
+
