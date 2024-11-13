@@ -4,7 +4,21 @@
   <meta charset="UTF-8">
   <title>Invaders Game</title>
   <style>
-    /* 追加の簡易スタイル */
+    /* ページ全体の背景色とテキスト色を設定 */
+    body {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    /* キャンバスのスタイルを設定 */
+    #gameCanvas {
+      background-color: #000; /* キャンバスを黒い背景に設定 */
+      border: 2px solid #fff; /* キャンバスの白い枠線 */
+    }
+
+    /* スコア、ライフ、ステージ表示のスタイル */
     #score, #lives, #stage {
       font-size: 20px;
       margin: 10px;
@@ -17,7 +31,7 @@
   <div id="score">Score: 0</div>
   <div id="lives">Lives: 3</div>
   <div id="stage">Stage: 1</div>
-  <canvas id="gameCanvas" width="600" height="400" style="border: 1px solid white;"></canvas>
+  <canvas id="gameCanvas" width="600" height="400"></canvas>
   <button id="startButton" onclick="startGame()">Start Game</button>
   <script src="script.js"></script>
 </body>
