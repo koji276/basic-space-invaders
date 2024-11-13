@@ -18,6 +18,8 @@ const bulletWidth = 5;
 const bulletHeight = 10;
 const bombWidth = 5;
 const bombHeight = 10;
+let enemyDirection = 1; // 敵の移動方向（1: 右, -1: 左）
+let enemySpeed = 1; // 敵の移動速度
 
 // 敵の生成
 function createEnemies() {
@@ -35,9 +37,41 @@ function createEnemies() {
   }
 }
 
+// 敵の移動
+function moveEnemies() {
+  let moveDown = false;
+
+  // 右端・左端のチェック
+  enemies.forEach(enemy => {
+    if (enemy.isAlive) {
+      if (enemyDirection === 1 && enemy.x + enemy.width >= canvas.width) {
+        moveDown = true;
+      } else if (enemyDirection === -1 && enemy.x <= 0) {
+        moveDown = true;
+      }
+    }
+  });
+
+  // 敵を下に移動し、反転
+  if (moveDown) {
+    enemyDirection *= -1;
+    enemies.forEach(enemy => {
+      if (enemy.isAlive) {
+        enemy.y += enemyHeight;
+      }
+    });
+  } else {
+    // 左右に移動
+    enemies.forEach(enemy => {
+      if (enemy.isAlive) {
+        enemy.x += enemySpeed * enemyDirection;
+      }
+    });
+  }
+}
+
 // 爆弾の生成
 function dropBombs() {
-  // 各列で一番下の敵を探し、その位置から爆弾を発射
   const bottomEnemies = [];
   for (let i = 0; i < 5; i++) {
     for (let j = 2; j >= 0; j--) {
@@ -48,10 +82,9 @@ function dropBombs() {
       }
     }
   }
-  
-  // ランダムに爆弾を発射
+
   bottomEnemies.forEach(enemy => {
-    if (Math.random() < 0.03) { // 3%の確率で爆弾を発射
+    if (Math.random() < 0.03) {
       bombs.push({ x: enemy.x + enemy.width / 2, y: enemy.y + enemy.height });
     }
   });
@@ -73,7 +106,7 @@ function drawBullets() {
   });
 }
 
-// 敵の描画と移動
+// 敵の描画
 function drawEnemies() {
   ctx.fillStyle = '#ffff00';
   enemies.forEach(enemy => {
@@ -104,5 +137,77 @@ function checkCollision() {
         bullet.y < enemy.y + enemy.height &&
         bullet.y + bulletHeight > enemy.y
       ) {
-        enemy.isAlive = f
+        enemy.isAlive = false;
+        bullet.y = -10;
+        score += 10;
+        document.getElementById('score').textContent = `Score: ${score}`;
+      }
+    });
+  });
+}
+
+// 衝突判定（爆弾とプレイヤー）
+function checkGameOver() {
+  bombs.forEach(bomb => {
+    if (
+      bomb.x < playerX + playerWidth &&
+      bomb.x + bombWidth > playerX &&
+      bomb.y < playerY + playerHeight &&
+      bomb.y + bombHeight > playerY
+    ) {
+      isGameOver = true;
+    }
+  });
+}
+
+// ゲームの描画
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPlayer();
+  drawBullets();
+  drawEnemies();
+  drawBombs();
+  checkCollision();
+  checkGameOver();
+  if (isGameOver) {
+    cancelAnimationFrame(gameInterval);
+    alert("ゲームオーバー！");
+    startButton.style.display = 'block';
+  }
+}
+
+// ゲームの更新
+function update() {
+  if (!isGameOver) {
+    moveEnemies(); // 敵の移動を追加
+    draw();
+    dropBombs();
+    gameInterval = requestAnimationFrame(update);
+  }
+}
+
+// スタートボタンをクリックしたときに呼ばれる関数
+function startGame() {
+  score = 0;
+  document.getElementById('score').textContent = `Score: ${score}`;
+  createEnemies();
+  bullets = [];
+  bombs = [];
+  isGameOver = false;
+  playerX = canvas.width / 2 - playerWidth / 2;
+  startButton.style.display = 'none';
+  update();
+}
+
+// キー操作
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft' && playerX > 0) {
+    playerX -= 10;
+  } else if (e.key === 'ArrowRight' && playerX < canvas.width - playerWidth) {
+    playerX += 10;
+  } else if (e.key === ' ') {
+    bullets.push({ x: playerX + playerWidth / 2 - bulletWidth / 2, y: playerY });
+  }
+});
+
 
