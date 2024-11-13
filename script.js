@@ -93,8 +93,14 @@ function dropBombs() {
 // プレイヤーの描画
 function drawPlayer() {
   ctx.fillStyle = '#00ff00';
-  ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
+  ctx.beginPath();
+  ctx.moveTo(playerX, playerY + playerHeight); // 左下の頂点
+  ctx.lineTo(playerX + playerWidth / 2, playerY); // 上の頂点
+  ctx.lineTo(playerX + playerWidth, playerY + playerHeight); // 右下の頂点
+  ctx.closePath();
+  ctx.fill();
 }
+
 
 // 弾の描画と移動
 function drawBullets() {
