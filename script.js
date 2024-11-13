@@ -227,8 +227,9 @@ function startGame() {
   isGameOver = false;
   playerX = canvas.width / 2 - playerWidth / 2;
   startButton.style.display = 'none';
-  update();
+  update(); // ゲームの更新を開始
 }
+
 
 // キー操作
 document.addEventListener('keydown', (e) => {
