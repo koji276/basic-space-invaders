@@ -181,7 +181,10 @@ function startNextStage() {
   bullets = [];
   bombs = [];
   playerX = canvas.width / 2 - playerWidth / 2; // プレイヤーの位置を中央にリセット
-  enemySpeed += 0.5; // 次のステージで敵の速度を少し上げる
+  
+  // 敵の速度を増加させるが、最大速度は10に制限
+  enemySpeed = Math.min(enemySpeed + 0.5, 10);
+
   createEnemies();
   isGameOver = false;
   update();
