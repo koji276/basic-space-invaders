@@ -163,9 +163,14 @@ function checkGameOver() {
   });
 }
 
+
+以下の修正を加えました。checkStageClear関数とstartNextStage関数を変更し、次のステージが正常に開始されるようにしました。
+
+javascript
+Copy code
 // 全ての敵が破壊されたか確認
 function checkStageClear() {
-  if (enemies.every(enemy => !enemy.isAlive)) {
+  if (!isGameOver && enemies.every(enemy => !enemy.isAlive)) {
     cancelAnimationFrame(gameInterval);
     setTimeout(() => {
       alert(`Success ${stage} stage!`);
@@ -185,8 +190,13 @@ function startNextStage() {
   // 敵の速度を増加させるが、最大速度は10に制限
   enemySpeed = Math.min(enemySpeed + 0.5, 10);
 
+  // 新しい敵を生成
   createEnemies();
+  
+  // ゲームオーバーフラグをリセット
   isGameOver = false;
+
+  // ゲームループを再開
   update();
 }
 
