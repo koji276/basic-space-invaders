@@ -86,16 +86,12 @@ function dropBombs() {
   });
 }
 
-// プレイヤー（三角形キャノン）の描画
+// プレイヤー（キャノン）の描画
 function drawPlayer() {
   ctx.fillStyle = '#00ff00';
-  ctx.beginPath();
-  ctx.moveTo(playerX, playerY + playerHeight);
-  ctx.lineTo(playerX + playerWidth / 2, playerY);
-  ctx.lineTo(playerX + playerWidth, playerY + playerHeight);
-  ctx.closePath();
-  ctx.fill();
+  ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
 }
+
 
 function drawBullets() {
   ctx.fillStyle = '#ff0000';
