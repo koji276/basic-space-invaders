@@ -178,11 +178,13 @@ function checkStageClear() {
 
 // 次のステージを開始
 function startNextStage() {
-  score = 0;
-  playerLives = 3;
   bullets = [];
   bombs = [];
-  enemySpeed += 0.5; // 次のステージで敵の速度を少し上げる
+  playerX = canvas.width / 2 - playerWidth / 2; // プレイヤーの位置を中央にリセット
+  
+  // 敵の速度を増加させるが、最大速度は10に制限
+  enemySpeed = Math.min(enemySpeed + 0.5, 10);
+
   createEnemies();
   isGameOver = false;
   update();
@@ -227,9 +229,8 @@ function startGame() {
   isGameOver = false;
   playerX = canvas.width / 2 - playerWidth / 2;
   startButton.style.display = 'none';
-  update(); // ゲームの更新を開始
+  update();
 }
-
 
 // キー操作
 document.addEventListener('keydown', (e) => {
